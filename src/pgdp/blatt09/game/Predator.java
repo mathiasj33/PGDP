@@ -21,8 +21,4 @@ public class Predator extends Animal {
         Animal a = position.getAnimal(square);
         return (a.female != female) && !(a instanceof Predator);
     }
-    
-    protected boolean canAccessField(String square) {
-        return !position.fieldOccupied(square) || enemyVegetarianOnField(square);
-    }
 }

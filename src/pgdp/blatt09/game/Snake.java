@@ -29,7 +29,7 @@ public class Snake extends Predator {
         return moves.toArray(new Move[moves.size()]);
     }
 
-    public List<Vector> getAllVectors() {  //TODO: make private
+    private List<Vector> getAllVectors() {
         List<Vector> vectors = new List<>();
         Vector start = VectorUtils.squareToVector(square);
         
@@ -56,7 +56,6 @@ public class Snake extends Predator {
             }
 
             vectors.add(start);
-            
             dir = alternateX ? new Vector(-dir.x, dir.y) : new Vector(dir.x, -dir.y);
         }
     }

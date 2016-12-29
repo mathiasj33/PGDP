@@ -45,8 +45,8 @@ public class Position {
         next = movesNext;
         myAnimals = new Animal[32];
         nrAnimals = 0;
-        addAnimal(new Elephant(true, "e3", this));
-//        addAnimal(new Rabbit(false, "e4", this));
+        addAnimal(new Horse(true, "e3", this));
+        addAnimal(new Rabbit(false, "f3", this));
         moves = List.<Move>fromArrray(myAnimals[0].possibleMoves());
         System.out.println(moves);
         

@@ -21,6 +21,26 @@ public class Leopard extends Predator {
     }
 
     @Override
+    public Move[] possibleMoves() {
+        List<Move> moves = new List<>();
+        for(Vector dir : Vector.EIGHT_DIR_VECTORS) {
+            Vector pos = VectorUtils.squareToVector(square);
+            while(true) {
+                pos = pos.add(dir);
+                String posSquare = VectorUtils.vectorToSquare(pos);
+                if(!position.isValid(posSquare) || position.fieldOccupied(posSquare) && !enemyVegetarianOnField(posSquare)) {
+                    break;
+                }
+                moves.add(new Move(this.square, VectorUtils.vectorToSquare(pos)));
+                if(position.fieldOccupied(posSquare) && enemyVegetarianOnField(posSquare)) {
+                    break;
+                }
+            }
+        }
+        return moves.toArray(new Move[moves.size()]);
+    }
+    
+    @Override
     public String toString(){
         return this.female
           ? (Globals.darkSquare(this.square) ? Globals.ts_female_leopard_dark : Globals.ts_female_leopard_light)
