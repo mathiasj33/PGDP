@@ -14,6 +14,12 @@ public class List<T> {
         array = new Object[size];
     }
 
+    public static <T> List<T> fromArrray(T[] arr) {
+        List<T> list = new List<>();
+        list.addAll(arr);
+        return list;
+    }
+    
     public T get(int index) {
         if (index < 0 || index >= size) {
             throw new IndexOutOfBoundsException();
@@ -36,6 +42,12 @@ public class List<T> {
         }
     }
 
+    public void addAll(List<T> list) {
+        for(int i = 0; i < list.size(); i++) {
+            add(list.get(i));
+        }
+    }
+    
     public void remove(T e) {
         ArrayUtils.shiftLeftFrom(array, indexOf(e));
         last--;

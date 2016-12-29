@@ -22,7 +22,7 @@ public class Rabbit extends Vegetarian {
         };
         for (Vector v : vectors) {
             String field = VectorUtils.add(square, v);
-            if (position.isValid(field)) {
+            if (position.isValid(field) && !position.fieldOccupied(field)) {
                 moves.add(new Move(square, field));
             }
         }

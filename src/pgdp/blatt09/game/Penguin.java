@@ -21,6 +21,21 @@ public class Penguin extends Predator {
     }
 
     @Override
+    public Move[] possibleMoves() {
+        List<Move> moves = new List<>();
+        Vector[] vectors = new Vector[]{
+            new Vector(0, 1), new Vector(0, -1), new Vector(1, 0), new Vector(-1, 0), new Vector(1, 1), new Vector(-1, 1), new Vector(1, -1), new Vector(-1, -1)
+        };
+        for (Vector v : vectors) {
+            String field = VectorUtils.add(square, v);
+            if (position.isValid(field) && canAccessField(field)) {
+                moves.add(new Move(square, field));
+            }
+        }
+        return moves.toArray(new Move[moves.size()]);
+    }
+    
+    @Override
     public String toString(){
         return this.female
           ? (Globals.darkSquare(this.square) ? Globals.ts_female_penguin_dark : Globals.ts_female_penguin_light)

@@ -16,4 +16,13 @@ public class Predator extends Animal {
     public Predator(boolean female, String square, Position position) {
         super(female, square, position);
     }
+    
+    protected boolean enemyVegetarianOnField(String square) {
+        Animal a = position.getAnimal(square);
+        return (a.female != female) && !(a instanceof Predator);
+    }
+    
+    protected boolean canAccessField(String square) {
+        return !position.fieldOccupied(square) || enemyVegetarianOnField(square);
+    }
 }

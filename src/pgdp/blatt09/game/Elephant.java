@@ -14,6 +14,10 @@ public class Elephant extends Vegetarian {
         super(female, square, position);
     }
 
+    @Override
+    public Move[] possibleMoves() {
+        
+    }
 
     @Override
     public String toString(){
