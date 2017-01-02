@@ -12,9 +12,12 @@ package pgdp.blatt09.game;
 public class Main {
 
     public static void main(String args[]) {
-        //TODO: fragen nach Anfangsspieler
         Game game = new Game();
-        game.startGame(true);
+        String input = "W";  //TODO
+//        do {
+//           input = IO.readString("Soll M oder W beginnen? (M/W)\n");
+//        } while(!input.equals("M") && !input.equals("W"));
+        game.startGame(input.equals("W"));
     }
 
 }

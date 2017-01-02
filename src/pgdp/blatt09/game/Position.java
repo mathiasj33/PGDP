@@ -1,15 +1,10 @@
 package pgdp.blatt09.game;
 
-import java.util.Arrays;
-import static pgdp.blatt09.game.VectorUtils.squareToVector;
-
 /**
  * Die Klasse Position repraesentiert eine Spielsituation.
  *
  */
 public class Position {
-
-    private List<Move> moves = new List<>(); //TODO: Entfernen
     
     /**
      * Die Tiere werden intern in einem Array gespeichert.
@@ -43,15 +38,10 @@ public class Position {
      */
     public void reset(char movesNext) {
         next = movesNext;
-        myAnimals = new Animal[32];
+        myAnimals = new Animal[4];
         nrAnimals = 0;
-        addAnimal(new Horse(true, "e3", this));
-        addAnimal(new Rabbit(false, "f3", this));
-        moves = List.<Move>fromArrray(myAnimals[0].possibleMoves());
-        System.out.println(moves);
-        
-//        initSide(true);
-//        initSide(false);
+        initSide(true);
+        initSide(false);
     }
     
     private void initSide(boolean w) {
@@ -60,34 +50,34 @@ public class Position {
         
         addAnimal(new Penguin(w, "a" + front, this));
         addAnimal(new Penguin(w, "h" + front, this));
-        
-        addAnimal(new Rabbit(w, "b" + front, this));
-        addAnimal(new Rabbit(w, "c" + front, this));
-        addAnimal(new Rabbit(w, "d" + front, this));
-        addAnimal(new Rabbit(w, "e" + front, this));
-        addAnimal(new Rabbit(w, "f" + front, this));
-        addAnimal(new Rabbit(w, "g" + front, this));
-        
-        addAnimal(new Snake(w, "a" + back, this));
-        addAnimal(new Snake(w, "h" + back, this));
-        
-        addAnimal(new Elephant(w, "b" + back, this));
-        addAnimal(new Elephant(w, "g" + back, this));
-        
-        addAnimal(new Horse(w, "c" + back, this));
-        addAnimal(new Horse(w, "f" + back, this));
-        
-        addAnimal(new Leopard(w, "d" + back, this));
-        addAnimal(new Leopard(w, "e" + back, this));
-        
-        for(Animal a : myAnimals) {
-            if(a instanceof Penguin)
-            System.out.println(Arrays.toString(a.possibleMoves()));
-        }
+//        
+//        addAnimal(new Rabbit(w, "b" + front, this));
+//        addAnimal(new Rabbit(w, "c" + front, this));
+//        addAnimal(new Rabbit(w, "d" + front, this));
+//        addAnimal(new Rabbit(w, "e" + front, this));
+//        addAnimal(new Rabbit(w, "f" + front, this));
+//        addAnimal(new Rabbit(w, "g" + front, this));
+//        
+//        addAnimal(new Snake(w, "a" + back, this));
+//        addAnimal(new Snake(w, "h" + back, this));
+//        
+//        addAnimal(new Elephant(w, "b" + back, this));
+//        addAnimal(new Elephant(w, "g" + back, this));
+//        
+//        addAnimal(new Horse(w, "c" + back, this));
+//        addAnimal(new Horse(w, "f" + back, this));
+//        
+//        addAnimal(new Leopard(w, "d" + back, this));
+//        addAnimal(new Leopard(w, "e" + back, this));
     }
     
     public boolean isValid(String square) {
-        Vector v = squareToVector(square);
+        Vector v;
+        try {
+            v = VectorUtils.squareToVector(square);
+        } catch(IllegalArgumentException e) {
+            return false;
+        }
         if(v.x < 0 || v.x > 7 || v.y < 0 || v.y > 7) return false;
         return true;
     }
@@ -108,6 +98,18 @@ public class Position {
         throw new IllegalStateException("There is no animal on " + square);
     }
 
+    public boolean animalBelongsToCurrentPlayer(Animal animal) {
+        return animal.female && next == 'W' || !animal.female && next == 'M';
+    }
+    
+    public Move[] getAllPossibleMoves() {
+        List<Move> moves = new List<>();
+        for(Animal a : myAnimals) {
+            if(animalBelongsToCurrentPlayer(a)) moves.addAll(a.possibleMoves());
+        }
+        return moves.toArray(new Move[moves.size()]);
+    }
+    
     private void addAnimal(Animal a) {
         myAnimals[nrAnimals] = a;
         nrAnimals++;
@@ -126,10 +128,31 @@ public class Position {
      * @param move Array mit den Zuegen, die ausgefuehrt werden sollen.
      *
      */
-    public void applyMoves(Move[] move){
-        //TODO
+    public void applyMoves(Move[] moves){
+        for(Move m : moves) {
+            Animal animal = getAnimal(m.getFrom());
+            String newSquare = m.getTo();
+            if(fieldOccupied(newSquare)) {
+                deleteAnimal(getAnimal(newSquare));
+                ((Predator) animal).resetWithoutFood();
+            }
+            animal.square = newSquare;
+        }
+        changeCurrentPlayer();
     }
 
+    public void deleteAnimal(Animal a) {
+        myAnimals = ArrayUtils.copyAndDelete(myAnimals, new Animal[myAnimals.length - 1], a);
+        nrAnimals--;
+    }
+    
+    public void sunset() {
+        for(Animal a : myAnimals) a.sunset();
+    }
+    
+    public void changeCurrentPlayer() {
+        next = next == 'W' ? 'M' : 'W';
+    }
 
     /**
      * Ermittelt, ob/wer gewonnen hat.
@@ -141,13 +164,42 @@ public class Position {
      *
      */
     public char theWinner() {
-        //TODO
+        if(nrAnimals == 0) return 'N';
+        else if(getNumAnimalsOfPlayer(true) == 0) return 'M';
+        else if(getNumAnimalsOfPlayer(false) == 0) return 'W';
+        else if(getPredators().length == 0) {
+            if(getNumAnimalsOfPlayer(true) > getNumAnimalsOfPlayer(false)) return 'W';
+            else if(getNumAnimalsOfPlayer(true) < getNumAnimalsOfPlayer(false)) return 'M';
+            else {
+                return 'N';
+            }
+        }
+        return 'X';
+    }
+    
+    private int getNumAnimalsOfPlayer(boolean w) {
+        int count = 0;
+        for(Animal a : myAnimals) {
+            if(a.female == w) count++;
+        }
+        return count;
     }
 
+    public char getNext() {
+        return next;
+    }
 
+    public void setNext(char next) {
+        this.next = next;
+    }
 
-
-
+    public Animal[] getPredators() {
+        List<Animal> predators = new List<>();
+        for(Animal a : myAnimals) {
+            if(a instanceof Predator) predators.add(a);
+        }
+        return predators.toArray(new Predator[predators.size()]);
+    }
     // Ausgabe der Spielposition
 
     private static final int[] I = {8,7,6,5,4,3,2,1};
@@ -186,10 +238,6 @@ public class Position {
             str += (i+" ");
             for (String j : J) {
                 if (null == ani[toIndex(j)][i-1]) {
-                    if(containsMove(new Vector(toIndex(j), i-1))) { //TODO: remove
-                        str += " x";
-                        continue;
-                    }
                     str += (i+toIndex(j))%2==1 ? Globals.ts_empty_square_dark : Globals.ts_empty_square_light;
                 } else {
                     str += ani[toIndex(j)][i-1].toString();
@@ -199,13 +247,5 @@ public class Position {
         }
         str += "   a b c d e f g h\nIt is " + next + "'s turn.\n";
         return str;
-    }
-
-    private boolean containsMove(Vector v) {  //TODO: ENTFERNEN
-        for(int i = 0; i < moves.size(); i++) {
-            Move m = moves.get(i);
-            if(VectorUtils.squareToVector(m.getTo()).equals(v)) return true;
-        }
-        return false;
     }
 }

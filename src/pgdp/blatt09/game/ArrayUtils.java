@@ -15,4 +15,14 @@ public class ArrayUtils {
             array[i] = nextElement;
         }
     }
+    
+    public static <T> T[] copyAndDelete(T[] oldArray, T[] newArray, T e) {
+        int oldArrayIndex = 0;
+        for(int i = 0; i < newArray.length; i++) {
+            if(oldArray[oldArrayIndex].equals(e)) oldArrayIndex++;
+            newArray[i] = oldArray[oldArrayIndex];
+            oldArrayIndex++;
+        }
+        return newArray;
+    } 
 }

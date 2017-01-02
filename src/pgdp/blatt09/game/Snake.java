@@ -2,23 +2,25 @@ package pgdp.blatt09.game;
 
 public class Snake extends Predator {
 
-    // Eine Schlange kann 9 Tage bzw. Spielrunden ohne Essen auskommen.
-    // Die Deklaration darf entfernt (und der Wert z. B. direkt im Code
-    // verwendet) werden.
-    private static int withoutFood = 9;
-
     /**
      * Dem Konstruktor wird das Geschlecht des Tiers uebergeben.
      *
      */
     public Snake(boolean female) {
         super(female);
+        withoutFood = 9;
     }
 
     public Snake(boolean female, String square, Position position) {
         super(female, square, position);
+        withoutFood = 9;
     }
 
+    @Override
+    public void resetWithoutFood() {
+        withoutFood = 9;
+    }
+    
     @Override
     public Move[] possibleMoves() {
         List<Move> moves = new List<>();

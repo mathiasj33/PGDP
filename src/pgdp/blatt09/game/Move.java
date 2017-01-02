@@ -43,7 +43,7 @@ public class Move {
 
     @Override
     public String toString() {
-        return from + "-" + to;
+        return "From " + from + " to " + to;
     }
 
     @Override
