@@ -7,6 +7,7 @@ package pgdp.blatt09.game;
 public class Game {
 
     private Position pos;
+    private boolean wStarted;
     private GameMove currentGameMove;
 
     /**
@@ -27,6 +28,7 @@ public class Game {
     public void startGame(boolean ladiesFirst) {  //TODO: siehe oben
         pos = new Position();
         pos.reset(ladiesFirst ? 'W' : 'M');
+        wStarted = ladiesFirst;
         System.out.println(pos);
         startGameLoop();
     }
@@ -37,10 +39,10 @@ public class Game {
             if (print)
                 System.out.println(pos);
             print = true;
-            
-            currentGameMove = new GameMove();  //TODO: winning condition, refactoring, leerzeichen bei spielfeldausgabe ändern
+
+            currentGameMove = new GameMove();  //TODO: überprüfen, dass number of animals nicht größer als max. anzahl an animals ist!!, auch wenn tier frisst, muss danach der numOfDays runtergesetzt werden! !!!refactoring, leerzeichen bei spielfeldausgabe ändern, angabe nochmal durchgehen
             int nrAnimalsToMove = IO.readIntSafe("How many animals do you want to move? (0 - 4; '5' to show all possible moves; '6' to show predator information), "
-                    + "'7' to show the field again\n", 0, 7);
+                    + "'7' to show the field again)\n", 0, 7);
             switch (nrAnimalsToMove) {
                 case 5:
                     printAllPossibleMoves();
@@ -53,8 +55,13 @@ public class Game {
                 case 7:
                     continue;
                 case 0:
+                    if (wStarted != (pos.getNext() == 'W'))
+                        pos.sunset();
                     pos.changeCurrentPlayer();
-                    pos.sunset();
+                    if (pos.gameOver()) {
+                        printWinner();
+                        return;
+                    }
                     continue;
                 default:
                     break;
@@ -68,25 +75,31 @@ public class Game {
                 currentGameMove.addMove(move);
             }
 
-            pos.sunset();
+            if (wStarted != (pos.getNext() == 'W'))
+                        pos.sunset();
             pos.applyMoves(currentGameMove.getMoves());
-            
-            char winner = pos.theWinner();
-            if(winner == 'N') {
-                System.out.println("It's a draw.");
+
+            if (pos.gameOver()) {
+                printWinner();
                 return;
             }
-            else if(winner == 'X') {
-                continue;
-            }
-            System.out.println(winner + " won the game.");
-            return;
         }
     }
-    
+
+    private void printWinner() {
+        char winner = pos.theWinner();
+        if (winner == 'N') {
+            System.out.println("It's a draw.");
+            return;
+        } else if (winner == 'X') {
+            return;
+        }
+        System.out.println(winner + " won the game.");
+    }
+
     private void printPredatorInfo() {
         String s = "";
-        for(Animal a : pos.getPredators()) {
+        for (Animal a : pos.getPredators()) {
             s += a.toString().charAt(1) + " on field " + a.square + " can still live " + ((Predator) a).getWithoutFood() + " days without food.\n";
         }
         System.out.println(s);
@@ -99,7 +112,7 @@ public class Game {
         }
         System.out.println(s);
     }
-    
+
     private Animal readValidAnimal() {
         while (true) {
             String field = readOwnAnimalField();

@@ -38,10 +38,16 @@ public class Position {
      */
     public void reset(char movesNext) {
         next = movesNext;
-        myAnimals = new Animal[4];
+        myAnimals = new Animal[2];
         nrAnimals = 0;
-        initSide(true);
-        initSide(false);
+//        initSide(true);
+//        initSide(false);
+        
+//        addAnimal(new Leopard(false, "a2", this));
+        addAnimal(new Rabbit(true, "a4", this));
+//        addAnimal(new Rabbit(true, "c4", this));
+        addAnimal(new Rabbit(false, "d4", this));
+//        addAnimal(new Leopard(false, "a6", this));
     }
     
     private void initSide(boolean w) {
@@ -50,25 +56,25 @@ public class Position {
         
         addAnimal(new Penguin(w, "a" + front, this));
         addAnimal(new Penguin(w, "h" + front, this));
-//        
-//        addAnimal(new Rabbit(w, "b" + front, this));
-//        addAnimal(new Rabbit(w, "c" + front, this));
-//        addAnimal(new Rabbit(w, "d" + front, this));
-//        addAnimal(new Rabbit(w, "e" + front, this));
-//        addAnimal(new Rabbit(w, "f" + front, this));
-//        addAnimal(new Rabbit(w, "g" + front, this));
-//        
-//        addAnimal(new Snake(w, "a" + back, this));
-//        addAnimal(new Snake(w, "h" + back, this));
-//        
-//        addAnimal(new Elephant(w, "b" + back, this));
-//        addAnimal(new Elephant(w, "g" + back, this));
-//        
-//        addAnimal(new Horse(w, "c" + back, this));
-//        addAnimal(new Horse(w, "f" + back, this));
-//        
-//        addAnimal(new Leopard(w, "d" + back, this));
-//        addAnimal(new Leopard(w, "e" + back, this));
+        
+        addAnimal(new Rabbit(w, "b" + front, this));
+        addAnimal(new Rabbit(w, "c" + front, this));
+        addAnimal(new Rabbit(w, "d" + front, this));
+        addAnimal(new Rabbit(w, "e" + front, this));
+        addAnimal(new Rabbit(w, "f" + front, this));
+        addAnimal(new Rabbit(w, "g" + front, this));
+        
+        addAnimal(new Snake(w, "a" + back, this));
+        addAnimal(new Snake(w, "h" + back, this));
+        
+        addAnimal(new Elephant(w, "b" + back, this));
+        addAnimal(new Elephant(w, "g" + back, this));
+        
+        addAnimal(new Horse(w, "c" + back, this));
+        addAnimal(new Horse(w, "f" + back, this));
+        
+        addAnimal(new Leopard(w, "d" + back, this));
+        addAnimal(new Leopard(w, "e" + back, this));
     }
     
     public boolean isValid(String square) {
@@ -175,6 +181,10 @@ public class Position {
             }
         }
         return 'X';
+    }
+    
+    public boolean gameOver() {
+        return theWinner() != 'X';
     }
     
     private int getNumAnimalsOfPlayer(boolean w) {
