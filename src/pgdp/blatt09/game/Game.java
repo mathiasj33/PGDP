@@ -9,6 +9,8 @@ public class Game {
     private Position pos;
     private boolean wStarted;
     private GameMove currentGameMove;
+    private Console console;
+    private InputHandler inputHandler;
 
     /**
      * Startet ein neues Spiel. Der Benutzer wird ueber das Spielgeschehen
@@ -29,42 +31,29 @@ public class Game {
         pos = new Position();
         pos.reset(ladiesFirst ? 'W' : 'M');
         wStarted = ladiesFirst;
-        System.out.println(pos);
+        console = new Console(pos);
+        inputHandler = new InputHandler(this);
         startGameLoop();
     }
 
     private void startGameLoop() {
-        boolean print = false;
         while (true) {
-            if (print)
-                System.out.println(pos);
-            print = true;
+            console.printGame();
+            console.setPrint(true);
+            currentGameMove = new GameMove();  //TODO: testen, leerzeichen bei spielfeldausgabe ändern, angabe nochmal durchgehen
 
-            currentGameMove = new GameMove();  //TODO: überprüfen, dass number of animals nicht größer als max. anzahl an animals ist!!, auch wenn tier frisst, muss danach der numOfDays runtergesetzt werden! !!!refactoring, leerzeichen bei spielfeldausgabe ändern, angabe nochmal durchgehen
             int nrAnimalsToMove = IO.readIntSafe("How many animals do you want to move? (0 - 4; '5' to show all possible moves; '6' to show predator information), "
                     + "'7' to show the field again)\n", 0, 7);
-            switch (nrAnimalsToMove) {
-                case 5:
-                    printAllPossibleMoves();
-                    print = false;
-                    continue;
-                case 6:
-                    printPredatorInfo();
-                    print = false;
-                    continue;
-                case 7:
-                    continue;
-                case 0:
-                    if (wStarted != (pos.getNext() == 'W'))
-                        pos.sunset();
-                    pos.changeCurrentPlayer();
-                    if (pos.gameOver()) {
-                        printWinner();
-                        return;
-                    }
-                    continue;
-                default:
-                    break;
+
+            if (nrAnimalsToMove == 0 || nrAnimalsToMove > 4) {
+                inputHandler.executeSpecialAction(nrAnimalsToMove);
+                continue;
+            }
+
+            if (nrAnimalsToMove > pos.getNumAnimalsOfCurrentPlayer()) {
+                IO.readString("You cannot move " + nrAnimalsToMove + " animals as you only have " + pos.getNumAnimalsOfCurrentPlayer() + " left.");
+                System.out.println("\n");
+                continue;
             }
 
             for (int i = 0; i < nrAnimalsToMove; i++) {
@@ -75,42 +64,21 @@ public class Game {
                 currentGameMove.addMove(move);
             }
 
-            if (wStarted != (pos.getNext() == 'W'))
-                        pos.sunset();
+            boolean wasEndOfRound = endOfRound();
             pos.applyMoves(currentGameMove.getMoves());
 
+            if (wasEndOfRound)
+                pos.sunset();
+
             if (pos.gameOver()) {
-                printWinner();
+                console.printWinner();
                 return;
             }
         }
     }
 
-    private void printWinner() {
-        char winner = pos.theWinner();
-        if (winner == 'N') {
-            System.out.println("It's a draw.");
-            return;
-        } else if (winner == 'X') {
-            return;
-        }
-        System.out.println(winner + " won the game.");
-    }
-
-    private void printPredatorInfo() {
-        String s = "";
-        for (Animal a : pos.getPredators()) {
-            s += a.toString().charAt(1) + " on field " + a.square + " can still live " + ((Predator) a).getWithoutFood() + " days without food.\n";
-        }
-        System.out.println(s);
-    }
-
-    private void printAllPossibleMoves() {
-        String s = "Possible moves:\n";
-        for (Move m : pos.getAllPossibleMoves()) {
-            s += m + "\n";
-        }
-        System.out.println(s);
+    public boolean endOfRound() {
+        return wStarted != (pos.getNext() == 'W');
     }
 
     private Animal readValidAnimal() {
@@ -133,15 +101,23 @@ public class Game {
         }
     }
 
+    private String readOwnAnimalField() {
+        String field = readField("Please type in the field of the animal you wish to move: ");
+
+        if (!pos.fieldOccupied(field) || !pos.animalBelongsToCurrentPlayer(pos.getAnimal(field))) {
+            System.out.println("There is no animal that belongs to the player '" + pos.getNext() + "' on the field '" + field + "'.");
+            return readOwnAnimalField();
+        }
+
+        return field;
+    }
+
     private Move readValidMove(Animal animal) {
         while (true) {
-            Move[] moves = animal.possibleMoves();
-
-            String targets = getTargetFieldsString(moves);
-            System.out.println("This animal can move to positions " + targets + ".");
-
+            console.printMoves(animal);
+            
             String chosenTarget = readField("Where do you want to move it?\n");
-            if (!containsTarget(moves, chosenTarget)) {
+            if (!animal.canMoveTo(chosenTarget)) {
                 System.out.println("The animal cannot move to " + chosenTarget + ".");
                 continue;
             }
@@ -154,17 +130,6 @@ public class Game {
         }
     }
 
-    private String readOwnAnimalField() {
-        String field = readField("Please type in the field of the animal you wish to move: ");
-
-        if (!pos.fieldOccupied(field) || !pos.animalBelongsToCurrentPlayer(pos.getAnimal(field))) {
-            System.out.println("There is no animal that belongs to the player '" + pos.getNext() + "' on the field '" + field + "'.");
-            return readOwnAnimalField();
-        }
-
-        return field;
-    }
-
     private String readField(String msg) {
         String field;
         do {
@@ -173,22 +138,11 @@ public class Game {
         return field;
     }
 
-    private String getTargetFieldsString(Move[] moves) {
-        String s = "";
-        for (Move m : moves) {
-            s += m.getTo();
-            if (!m.equals(moves[moves.length - 1])) {
-                s += ",";
-            }
-        }
-        return s;
+    public Position getPosition() {
+        return pos;
     }
 
-    private boolean containsTarget(Move[] moves, String target) {
-        for (Move m : moves) {
-            if (m.getTo().equals(target))
-                return true;
-        }
-        return false;
+    public Console getConsole() {
+        return console;
     }
 }

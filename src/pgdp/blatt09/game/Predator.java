@@ -20,6 +20,7 @@ public class Predator extends Animal {
     }
     
     protected boolean enemyVegetarianOnField(String square) {
+        if(!position.fieldOccupied(square)) return false;
         Animal a = position.getAnimal(square);
         return (a.female != female) && !(a instanceof Predator);
     }

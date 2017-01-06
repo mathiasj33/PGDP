@@ -32,8 +32,8 @@ public class Leopard extends Predator {
                 if(!position.isValid(posSquare) || position.fieldOccupied(posSquare) && !enemyVegetarianOnField(posSquare)) {
                     break;
                 }
-                moves.add(new Move(this.square, VectorUtils.vectorToSquare(pos)));
-                if(position.fieldOccupied(posSquare) && enemyVegetarianOnField(posSquare)) {
+                moves.add(new Move(this.square, posSquare));
+                if(enemyVegetarianOnField(posSquare)) {
                     break;
                 }
             }

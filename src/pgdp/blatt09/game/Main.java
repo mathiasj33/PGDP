@@ -13,10 +13,10 @@ public class Main {
 
     public static void main(String args[]) {
         Game game = new Game();
-        String input = "W";  //TODO
-//        do {
-//           input = IO.readString("Soll M oder W beginnen? (M/W)\n");
-//        } while(!input.equals("M") && !input.equals("W"));
+        String input = "W";
+        do {
+           input = IO.readString("Soll M oder W beginnen? (M/W)\n");
+        } while(!input.equals("M") && !input.equals("W"));
         game.startGame(input.equals("W"));
     }
 

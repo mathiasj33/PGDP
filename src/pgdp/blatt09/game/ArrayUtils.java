@@ -17,12 +17,17 @@ public class ArrayUtils {
     }
     
     public static <T> T[] copyAndDelete(T[] oldArray, T[] newArray, T e) {
-        int oldArrayIndex = 0;
-        for(int i = 0; i < newArray.length; i++) {
-            if(oldArray[oldArrayIndex].equals(e)) oldArrayIndex++;
-            newArray[i] = oldArray[oldArrayIndex];
-            oldArrayIndex++;
-        }
+        int index = indexOf(oldArray, e);
+        shiftLeftFrom(oldArray, index);
+        copy(oldArray, newArray);
         return newArray;
-    } 
+    }
+    
+    private static <T> int indexOf(T[] array, T e) {
+        for(int i = 0; i < array.length; i++) {
+            T t = array[i];
+            if(t.equals(e)) return i;
+        }
+        return -1;
+    }
 }

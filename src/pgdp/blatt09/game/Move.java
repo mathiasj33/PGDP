@@ -56,14 +56,14 @@ public class Move {
     }
 
     @Override
-    public boolean equals(Object other) {
+    public final boolean equals(Object other) {
         if (this == other) {
             return true;
         }
         if (other == null) {
             return false;
         }
-        if (other.getClass() != getClass()) {
+        if (!(other instanceof Move)) {
             return false;
         }
         Move o = (Move) other;

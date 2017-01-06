@@ -38,16 +38,10 @@ public class Position {
      */
     public void reset(char movesNext) {
         next = movesNext;
-        myAnimals = new Animal[2];
+        myAnimals = new Animal[32];
         nrAnimals = 0;
-//        initSide(true);
-//        initSide(false);
-        
-//        addAnimal(new Leopard(false, "a2", this));
-        addAnimal(new Rabbit(true, "a4", this));
-//        addAnimal(new Rabbit(true, "c4", this));
-        addAnimal(new Rabbit(false, "d4", this));
-//        addAnimal(new Leopard(false, "a6", this));
+        initSide(true);
+        initSide(false);
     }
     
     private void initSide(boolean w) {
@@ -114,6 +108,14 @@ public class Position {
             if(animalBelongsToCurrentPlayer(a)) moves.addAll(a.possibleMoves());
         }
         return moves.toArray(new Move[moves.size()]);
+    }
+    
+    public int getNumAnimalsOfCurrentPlayer() {
+        int count = 0;
+        for(Animal a : myAnimals) {
+            if(animalBelongsToCurrentPlayer(a)) count++;
+        }
+        return count;
     }
     
     private void addAnimal(Animal a) {

@@ -18,6 +18,14 @@ public class GameMove {
         return false;
     }
 
+    public boolean hasAlreadyMoved(Animal a) {
+        for (int i = 0; i < fixedMoves.size(); i++) {
+            if (fixedMoves.get(i).getFrom().equals(a.square))
+                return true;
+        }
+        return false;
+    }
+    
     public Move[] getMoves() {
         return fixedMoves.toArray(new Move[fixedMoves.size()]);
     }
@@ -28,13 +36,5 @@ public class GameMove {
 
     public void setMovedPredator(boolean movedPredator) {
         this.movedPredator = movedPredator;
-    }
-
-    public boolean hasAlreadyMoved(Animal a) {
-        for (int i = 0; i < fixedMoves.size(); i++) {
-            if (fixedMoves.get(i).getFrom().equals(a.square))
-                return true;
-        }
-        return false;
     }
 }

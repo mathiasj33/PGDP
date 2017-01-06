@@ -24,23 +24,23 @@ public class Snake extends Predator {
     @Override
     public Move[] possibleMoves() {
         List<Move> moves = new List<>();
-        List<Vector> vectors = getAllVectors();
+        List<Vector> vectors = getAllTargets();
         for (int i = 0; i < vectors.size(); i++) {
             moves.add(new Move(square, VectorUtils.vectorToSquare(vectors.get(i))));
         }
         return moves.toArray(new Move[moves.size()]);
     }
 
-    private List<Vector> getAllVectors() {
-        List<Vector> vectors = new List<>();
+    private List<Vector> getAllTargets() {
+        List<Vector> targets = new List<>();
         Vector start = VectorUtils.squareToVector(square);
         
-        vectors.addAll(getAlternatingVectors(start, new Vector(1, 1), false));
-        vectors.addAll(getAlternatingVectors(start, new Vector(1, -1), true));
-        vectors.addAll(getAlternatingVectors(start, new Vector(-1, -1), false));
-        vectors.addAll(getAlternatingVectors(start, new Vector(-1, 1), true));
+        targets.addAll(getAlternatingVectors(start, new Vector(1, 1), false));
+        targets.addAll(getAlternatingVectors(start, new Vector(1, -1), true));
+        targets.addAll(getAlternatingVectors(start, new Vector(-1, -1), false));
+        targets.addAll(getAlternatingVectors(start, new Vector(-1, 1), true));
 
-        return vectors;
+        return targets;
     }
 
     private List<Vector> getAlternatingVectors(Vector start, Vector dir, boolean alternateX) {

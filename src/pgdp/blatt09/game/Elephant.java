@@ -25,7 +25,7 @@ public class Elephant extends Vegetarian {
                 if(!position.isValid(posSquare) || position.fieldOccupied(posSquare)) {
                     break;
                 }
-                moves.add(new Move(this.square, VectorUtils.vectorToSquare(pos)));
+                moves.add(new Move(this.square, posSquare));
             }
         }
         return moves.toArray(new Move[moves.size()]);
