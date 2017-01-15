@@ -56,7 +56,7 @@ public class Move {
     }
 
     @Override
-    public final boolean equals(Object other) {
+    public boolean equals(Object other) {
         if (this == other) {
             return true;
         }

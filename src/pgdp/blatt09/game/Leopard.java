@@ -1,7 +1,6 @@
 package pgdp.blatt09.game;
 
 public class Leopard extends Predator {
-
     /**
      * Dem Konstruktor wird das Geschlecht des Tiers uebergeben.
      *
@@ -9,16 +8,13 @@ public class Leopard extends Predator {
     public Leopard(boolean female) {
         super(female);
         withoutFood = 5;
+        initialWithoutFood = 5;
     }
 
     public Leopard(boolean female, String square, Position position) {
         super(female, square, position);
         withoutFood = 5;
-    }
-
-    @Override
-    public void resetWithoutFood() {
-        withoutFood = 5;
+        initialWithoutFood = 5;
     }
     
     @Override

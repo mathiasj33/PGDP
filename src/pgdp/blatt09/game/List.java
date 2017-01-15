@@ -73,13 +73,7 @@ public class List<T> {
     }
 
     public boolean contains(T e) {
-        for (int i = 0; i < size; i++) {
-            T t = (T) array[i];
-            if (t.equals(e)) {
-                return true;
-            }
-        }
-        return false;
+        return indexOf(e) != -1;
     }
 
     public int indexOf(T e) {

@@ -155,7 +155,9 @@ public class Position {
     }
     
     public void sunset() {
-        for(Animal a : myAnimals) a.sunset();
+        Animal[] copy = new Animal[nrAnimals];
+        ArrayUtils.copy(myAnimals, copy);
+        for(Animal a : copy) a.sunset();  //iterating over a copy due to the fact that sunset() can potentially call deleteAnimal()
     }
     
     public void changeCurrentPlayer() {
@@ -257,7 +259,7 @@ public class Position {
             }
             str += " " + i + "\n";
         }
-        str += "   a b c d e f g h\nIt is " + next + "'s turn.\n";
+        str += "  a b c d e f g h\nIt is " + next + "'s turn.\n";
         return str;
     }
 }

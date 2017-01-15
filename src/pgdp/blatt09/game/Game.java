@@ -27,7 +27,7 @@ public class Game {
      *
      * Der Parameter spezifiziert, wer das Spiel beginnen darf.
      */
-    public void startGame(boolean ladiesFirst) {  //TODO: siehe oben
+    public void startGame(boolean ladiesFirst) {
         pos = new Position();
         pos.reset(ladiesFirst ? 'W' : 'M');
         wStarted = ladiesFirst;
@@ -40,13 +40,17 @@ public class Game {
         while (true) {
             console.printGame();
             console.setPrint(true);
-            currentGameMove = new GameMove();  //TODO: testen, leerzeichen bei spielfeldausgabe ändern, angabe nochmal durchgehen
+            currentGameMove = new GameMove();
 
             int nrAnimalsToMove = IO.readIntSafe("How many animals do you want to move? (0 - 4; '5' to show all possible moves; '6' to show predator information), "
                     + "'7' to show the field again)\n", 0, 7);
 
             if (nrAnimalsToMove == 0 || nrAnimalsToMove > 4) {
                 inputHandler.executeSpecialAction(nrAnimalsToMove);
+                if (pos.gameOver()) {
+                    console.printWinner();
+                    return;
+                }
                 continue;
             }
 
@@ -115,7 +119,7 @@ public class Game {
     private Move readValidMove(Animal animal) {
         while (true) {
             console.printMoves(animal);
-            
+
             String chosenTarget = readField("Where do you want to move it?\n");
             if (!animal.canMoveTo(chosenTarget)) {
                 System.out.println("The animal cannot move to " + chosenTarget + ".");

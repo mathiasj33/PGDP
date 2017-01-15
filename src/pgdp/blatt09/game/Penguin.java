@@ -10,16 +10,13 @@ public class Penguin extends Predator {
     public Penguin(boolean female) {
         super(female);
         withoutFood = 12;
+        initialWithoutFood = 12;
     }
 
     public Penguin(boolean female, String square, Position position) {
         super(female, square, position);
         withoutFood = 12;
-    }
-    
-    @Override
-    public void resetWithoutFood() {
-        withoutFood = 12;
+        initialWithoutFood = 12;
     }
     
     @Override

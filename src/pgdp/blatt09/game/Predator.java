@@ -6,6 +6,7 @@ package pgdp.blatt09.game;
 public class Predator extends Animal {
 
     protected int withoutFood = -1;
+    protected int initialWithoutFood = -1;
     
     /**
      * Dem Konstruktor wird das Geschlecht des Tiers uebergeben.
@@ -29,7 +30,9 @@ public class Predator extends Animal {
         return withoutFood;
     }
     
-    public void resetWithoutFood() {}
+    public void resetWithoutFood() {
+        withoutFood = initialWithoutFood;
+    }
     
     @Override
     public void sunset() {

@@ -9,16 +9,13 @@ public class Snake extends Predator {
     public Snake(boolean female) {
         super(female);
         withoutFood = 9;
+        initialWithoutFood = 9;
     }
 
     public Snake(boolean female, String square, Position position) {
         super(female, square, position);
         withoutFood = 9;
-    }
-
-    @Override
-    public void resetWithoutFood() {
-        withoutFood = 9;
+        initialWithoutFood = 9;
     }
     
     @Override
