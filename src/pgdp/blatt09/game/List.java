@@ -36,13 +36,15 @@ public class List<T> {
         }
     }
 
-    public void remove(T e) {
+    public boolean remove(T e) {
+        if(indexOf(e) == -1) return false;
         ArrayUtils.shiftLeftFrom(array, indexOf(e));
         last--;
         if (last < array.length / 3) {
             shrinkArray();
         }
         size--;
+        return true;
     }
 
     private void growArray() {
