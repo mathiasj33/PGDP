@@ -17,12 +17,9 @@ public class Rabbit extends Vegetarian {
     @Override
     public Move[] possibleMoves() {
         List<Move> moves = new List<>();
-        Vector[] vectors = new Vector[]{
-            new Vector(0, 1), new Vector(0, -1), new Vector(1, 0), new Vector(-1, 0), new Vector(1, 1), new Vector(-1, 1), new Vector(1, -1), new Vector(-1, -1)
-        };
-        for (Vector v : vectors) {
-            String field = VectorUtils.add(square, v);
-            if (position.isValid(field)) {
+        for (Vector dir : Vector.EIGHT_DIR_VECTORS) {
+            String field = VectorUtils.add(square, dir);
+            if (position.isValid(field) && !position.fieldOccupied(field)) {
                 moves.add(new Move(square, field));
             }
         }

@@ -16,4 +16,9 @@ public class Vegetarian extends Animal {
     public Vegetarian(boolean female, String square, Position position) {
         super(female, square, position);
     }
+    
+    @Override
+    public void sunset() {
+        
+    }
 }

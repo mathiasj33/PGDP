@@ -52,4 +52,11 @@ public class Animal {
         throw new RuntimeException("Method sunset should have been overridden");
     }
 
+    public boolean canMoveTo(String target) {
+        for (Move m : possibleMoves()) {
+            if (m.getTo().equals(target))
+                return true;
+        }
+        return false;
+    }
 }

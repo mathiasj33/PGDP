@@ -43,7 +43,7 @@ public class Move {
 
     @Override
     public String toString() {
-        return from + "-" + to;
+        return "From " + from + " to " + to;
     }
 
     @Override
@@ -63,7 +63,7 @@ public class Move {
         if (other == null) {
             return false;
         }
-        if (other.getClass() != getClass()) {
+        if (!(other instanceof Move)) {
             return false;
         }
         Move o = (Move) other;

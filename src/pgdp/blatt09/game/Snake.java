@@ -2,29 +2,68 @@ package pgdp.blatt09.game;
 
 public class Snake extends Predator {
 
-    // Eine Schlange kann 9 Tage bzw. Spielrunden ohne Essen auskommen.
-    // Die Deklaration darf entfernt (und der Wert z. B. direkt im Code
-    // verwendet) werden.
-    private static int withoutFood = 9;
-
-
     /**
      * Dem Konstruktor wird das Geschlecht des Tiers uebergeben.
      *
      */
     public Snake(boolean female) {
         super(female);
+        withoutFood = 9;
+        initialWithoutFood = 9;
     }
 
     public Snake(boolean female, String square, Position position) {
         super(female, square, position);
+        withoutFood = 9;
+        initialWithoutFood = 9;
+    }
+    
+    @Override
+    public Move[] possibleMoves() {
+        List<Move> moves = new List<>();
+        List<Vector> vectors = getAllTargets();
+        for (int i = 0; i < vectors.size(); i++) {
+            moves.add(new Move(square, VectorUtils.vectorToSquare(vectors.get(i))));
+        }
+        return moves.toArray(new Move[moves.size()]);
+    }
+
+    private List<Vector> getAllTargets() {
+        List<Vector> targets = new List<>();
+        Vector start = VectorUtils.squareToVector(square);
+        
+        targets.addAll(getAlternatingVectors(start, new Vector(1, 1), false));
+        targets.addAll(getAlternatingVectors(start, new Vector(1, -1), true));
+        targets.addAll(getAlternatingVectors(start, new Vector(-1, -1), false));
+        targets.addAll(getAlternatingVectors(start, new Vector(-1, 1), true));
+
+        return targets;
+    }
+
+    private List<Vector> getAlternatingVectors(Vector start, Vector dir, boolean alternateX) {
+        List<Vector> vectors = new List<>();
+        while (true) {
+            start = start.add(dir);
+            String square = VectorUtils.vectorToSquare(start);
+            if (!position.isValid(square)) {
+                return vectors;
+            } else if (position.fieldOccupied(square)) {
+                if (enemyVegetarianOnField(square)) {
+                    vectors.add(start);
+                }
+                return vectors;
+            }
+
+            vectors.add(start);
+            dir = alternateX ? new Vector(-dir.x, dir.y) : new Vector(dir.x, -dir.y);
+        }
     }
 
     @Override
-    public String toString(){
+    public String toString() {
         return this.female
-          ? (Globals.darkSquare(this.square) ? Globals.ts_female_snake_dark : Globals.ts_female_snake_light)
-          : (Globals.darkSquare(this.square) ? Globals.ts_male_snake_dark : Globals.ts_male_snake_light);
+                ? (Globals.darkSquare(this.square) ? Globals.ts_female_snake_dark : Globals.ts_female_snake_light)
+                : (Globals.darkSquare(this.square) ? Globals.ts_male_snake_dark : Globals.ts_male_snake_light);
     }
 
 }

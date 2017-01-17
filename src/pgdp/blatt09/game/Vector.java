@@ -4,6 +4,12 @@ public class Vector {
 
     public final int x;
     public final int y;
+    public final static Vector[] FOUR_DIR_VECTORS = new Vector[]{
+        new Vector(1, 0), new Vector(0, -1), new Vector(-1, 0), new Vector(0, 1)
+    };
+    public final static Vector[] EIGHT_DIR_VECTORS = new Vector[]{
+        new Vector(0, 1), new Vector(0, -1), new Vector(1, 0), new Vector(-1, 0), new Vector(1, 1), new Vector(-1, 1), new Vector(1, -1), new Vector(-1, -1)
+    };
 
     public Vector(int x, int y) {
         this.x = x;
@@ -14,11 +20,15 @@ public class Vector {
         return new Vector(x + other.x, y + other.y);
     }
 
+    public Vector mult(int scalar) {
+        return new Vector(x * scalar, y * scalar);
+    }
+    
     @Override
     public String toString() {
         return "Vector(" + x + ", " + y + ")";
     }
-    
+
     @Override
     public int hashCode() {
         final int prime = 31;
@@ -29,14 +39,14 @@ public class Vector {
     }
 
     @Override
-    public boolean equals(Object obj) {
+    public final boolean equals(Object obj) {
         if (this == obj) {
             return true;
         }
         if (obj == null) {
             return false;
         }
-        if (getClass() != obj.getClass()) {
+        if (!(obj instanceof Vector)) {
             return false;
         }
         Vector other = (Vector) obj;

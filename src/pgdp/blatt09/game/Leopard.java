@@ -1,25 +1,42 @@
 package pgdp.blatt09.game;
 
 public class Leopard extends Predator {
-
-    // Ein Leopard kann nur 5 Tage bzw. Spielrunden ohne Essen auskommen.
-    // Die Deklaration darf entfernt (und der Wert z. B. direkt im Code
-    // verwendet) werden.
-    private static int withoutFood = 5;
-
-
     /**
      * Dem Konstruktor wird das Geschlecht des Tiers uebergeben.
      *
      */
     public Leopard(boolean female) {
         super(female);
+        withoutFood = 5;
+        initialWithoutFood = 5;
     }
 
     public Leopard(boolean female, String square, Position position) {
         super(female, square, position);
+        withoutFood = 5;
+        initialWithoutFood = 5;
     }
-
+    
+    @Override
+    public Move[] possibleMoves() {
+        List<Move> moves = new List<>();
+        for(Vector dir : Vector.EIGHT_DIR_VECTORS) {
+            Vector pos = VectorUtils.squareToVector(square);
+            while(true) {
+                pos = pos.add(dir);
+                String posSquare = VectorUtils.vectorToSquare(pos);
+                if(!position.isValid(posSquare) || position.fieldOccupied(posSquare) && !enemyVegetarianOnField(posSquare)) {
+                    break;
+                }
+                moves.add(new Move(this.square, posSquare));
+                if(enemyVegetarianOnField(posSquare)) {
+                    break;
+                }
+            }
+        }
+        return moves.toArray(new Move[moves.size()]);
+    }
+    
     @Override
     public String toString(){
         return this.female

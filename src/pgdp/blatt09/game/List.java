@@ -14,6 +14,12 @@ public class List<T> {
         array = new Object[size];
     }
 
+    public static <T> List<T> fromArrray(T[] arr) {
+        List<T> list = new List<>();
+        list.addAll(arr);
+        return list;
+    }
+    
     public T get(int index) {
         if (index < 0 || index >= size) {
             throw new IndexOutOfBoundsException();
@@ -63,13 +69,7 @@ public class List<T> {
     }
 
     public boolean contains(T e) {
-        for (int i = 0; i < size; i++) {
-            T t = (T) array[i];
-            if (t.equals(e)) {
-                return true;
-            }
-        }
-        return false;
+        return indexOf(e) != -1;
     }
 
     public int indexOf(T e) {
