@@ -10,13 +10,13 @@ import java.util.Iterator;
 import java.util.Objects;
 
 public class Set<T> implements Iterable<T> {
-    private final List<T> list;
+    private final ArrayList<T> list;
     
     public Set() {
-        list = new List<>();
+        list = new ArrayList<>();
     }
     
-    private Set(List<T> list) {
+    private Set(ArrayList<T> list) {
         this.list = list;
     }
     

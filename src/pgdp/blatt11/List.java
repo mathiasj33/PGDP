@@ -1,108 +1,112 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+
 package pgdp.blatt11;
 
 import java.util.Iterator;
 
 public class List<T> implements Iterable<T> {
-
-    private final Object[] array;
+    private final Entry<T> head;
     private final int size;
-    private final int last;
-
+    
     public List() {
-        array = new Object[0];
-        this.size = 0;
-        this.last = -1;
+        head = null;
+        size = 0;
     }
-
-    private List(Object[] array, int size, int last) {
-        this.array = array;
+    
+    public List(Entry<T> head, int size) {
+        this.head = head;
         this.size = size;
-        this.last = last;
     }
     
-    public T get(int index) {
-        if (index < 0 || index >= size) {
-            throw new IndexOutOfBoundsException();
-        }
-        return (T) array[index];
-    }
-
     public List<T> add(T e) {
-        int newLast = last + 1;
-        Object[] newArray = new Object[array.length + 1];
-        ArrayUtils.copy(array, newArray);
-        newArray[newLast] = e;
-        int newSize = size + 1;
-        return new List<>(newArray, newSize, newLast);
+        if(size == 0) {
+            return new List(new Entry<>(null, e), 1);
+        }
+        Entry<T> newHead = createAddedToList(head, e);
+        return new List<>(newHead, size + 1);
     }
     
-    public void addAll(T... elements) {
-        for (T t : elements) {
-            add(t);
+    private Entry<T> createAddedToList(Entry<T> entry, T newElement) {
+        if(entry.next == null) {
+            Entry<T> addedEntry = new Entry<>(null, newElement);
+            Entry<T> newEntry = new Entry<>(addedEntry, entry.data);
+            return newEntry;
         }
+        return new Entry<>(createAddedToList(entry.next, newElement), entry.data);
     }
-
+    
     public List<T> remove(Object o) {
-        if(indexOf(o) == -1) return this;
-        int newLast = last - 1;
-        Object[] copy = new Object[array.length];
-        ArrayUtils.copy(array, copy);
-        ArrayUtils.shiftLeftFrom(copy, indexOf(o));
-        
-        Object[] newArray = new Object[array.length - 1];
-        ArrayUtils.copy(copy, newArray);
-        int newSize = size - 1;
-        
-        return new List<>(newArray, newSize, newLast);
-    }
-
-    public boolean contains(Object o) {
-        return indexOf(o) != -1;
-    }
-
-    public int indexOf(Object o) {
-        for (int i = 0; i < size; i++) {
-            T t = (T) array[i];
-            if (t.equals(o)) {
-                return i;
-            }
+        if(head == null) return this;
+        if(!contains(o)) return this;
+        if(o.equals(head.data)) {
+            return new List<>(head.next, size - 1);
         }
-        return -1;
+        Entry<T> newHead = createRemovedFromList(head, o);
+        return new List<>(newHead, size - 1);
     }
-
+    
+    private Entry<T> createRemovedFromList(Entry<T> entry, Object toRemove) {
+        if(entry.next.data.equals(toRemove)) {
+            Entry<T> newEntry = new Entry<>(entry.next.next, entry.data);
+            return newEntry;
+        }
+        return new Entry<>(createRemovedFromList(entry.next, toRemove), entry.data);
+    }
+    
+    public boolean contains(Object o) {
+        for(T e : this) {
+            if(e.equals(o)) return true;
+        }
+        return false;
+    }
+    
     public int size() {
         return size;
     }
-
+    
     @Override
     public String toString() {
-        String result = "[";
-        for (int i = 0; i < size; i++) {
-            result += array[i];
-            if (i != size - 1) {
-                result += ",";
-            }
+        if(head == null) return "[]";
+        String s = "[";
+        Entry<T> entry = head;
+        while(entry.next != null) {
+            s += entry.data + ",";
+            entry = entry.next;
         }
-        result += "]";
-        return result;
+        s += entry.data + "]";
+        return s;
     }
-
+    
     @Override
     public Iterator<T> iterator() {
         return new Iterator<T>() {
-            private int index = 0;
+            private Entry<T> current = head;
             
             @Override
             public boolean hasNext() {
-                return index < array.length;
+                return current != null;
             }
 
             @Override
             public T next() {
-                T e = get(index);
-                index++;
-                return e;
+                T data = current.data;
+                current = current.next;
+                return data;
             }
         };
+    }
+    
+    private class Entry<T> {
+        private final Entry<T> next;
+        private final T data;
+
+        public Entry(Entry<T> next, T data) {
+            this.next = next;
+            this.data = data;
+        }
     }
 }
