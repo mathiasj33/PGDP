@@ -7,16 +7,15 @@
 package pgdp.blatt11;
 
 import java.util.Iterator;
-import java.util.Objects;
 
 public class Set<T> implements Iterable<T> {
-    private final ArrayList<T> list;
+    private final List<T> list;
     
     public Set() {
-        list = new ArrayList<>();
+        list = new List<>();
     }
     
-    private Set(ArrayList<T> list) {
+    private Set(List<T> list) {
         this.list = list;
     }
     
@@ -78,19 +77,24 @@ public class Set<T> implements Iterable<T> {
     
     public static void main(String[] args) {
         Set<String> set = new Set<>();
-        set = set.add("Hey");
-        set = set.add("Jo");
-        set = set.add("fuck");
+        System.out.println(set);
+        set = set.add("hallo");
+        set = set.add("1");
+        set = set.add("2");
+        set = set.add("3");
+        set = set.remove("2");
         
-        set = set.remove("Jo");
+        Set<String> other = new Set<>();
+        other = other.add("3");
+        other = other.add("1");
+        other = other.remove("3");
+        other = other.add("3");
+        other = other.add("hallo");
         
         System.out.println(set);
-//        list = list.remove("Jo");
-//        for(String s : list) {
-//            System.out.println(s);
-//        }
-//        System.out.println(list.contains("Jo"));
-//        System.out.println(list.size());
+        System.out.println(other);
+        
+        System.out.println(set.equals(other));
     }
 
     @Override

@@ -1,9 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
 package pgdp.blatt11;
 
 import java.util.Iterator;
@@ -55,6 +49,19 @@ public class List<T> implements Iterable<T> {
             return newEntry;
         }
         return new Entry<>(createRemovedFromList(entry.next, toRemove), entry.data);
+    }
+    
+    public T get(int index) {
+        if(index >= size || index < 0) throw new IndexOutOfBoundsException();
+        int i = 0;
+        Entry<T> current = head;
+        while(current.next != null) {
+            if(i == index) return current.data;
+            i++;
+            current = current.next;
+        }
+        if(i == index) return current.data;
+        return null;
     }
     
     public boolean contains(Object o) {
