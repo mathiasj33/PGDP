@@ -77,24 +77,11 @@ public class Set<T> implements Iterable<T> {
     
     public static void main(String[] args) {
         Set<String> set = new Set<>();
-        System.out.println(set);
         set = set.add("hallo");
         set = set.add("1");
         set = set.add("2");
         set = set.add("3");
         set = set.remove("2");
-        
-        Set<String> other = new Set<>();
-        other = other.add("3");
-        other = other.add("1");
-        other = other.remove("3");
-        other = other.add("3");
-        other = other.add("hallo");
-        
-        System.out.println(set);
-        System.out.println(other);
-        
-        System.out.println(set.equals(other));
     }
 
     @Override

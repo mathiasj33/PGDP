@@ -100,6 +100,7 @@ public class List<T> implements Iterable<T> {
 
             @Override
             public T next() {
+                if(current == null) return null;
                 T data = current.data;
                 current = current.next;
                 return data;
