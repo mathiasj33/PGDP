@@ -2,7 +2,7 @@
 package pgdp.blatt11;
 
 public class NotLongEnoughExc extends Exception {
-    private int should, is;
+    private final int should, is;
 
     public NotLongEnoughExc(int should, int is) {
         this.should = should;

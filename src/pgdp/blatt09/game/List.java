@@ -41,6 +41,12 @@ public class List<T> {
             add(t);
         }
     }
+    
+    public void addAll(List<T> list) {
+        for(int i = 0; i < list.size(); i++) {
+            add(list.get(i));
+        }
+    }
 
     public boolean remove(T e) {
         if(indexOf(e) == -1) return false;
