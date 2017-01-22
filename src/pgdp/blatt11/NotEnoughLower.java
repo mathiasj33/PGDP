@@ -8,6 +8,6 @@ public class NotEnoughLower extends NotEnoughLetter {
 
     @Override
     public String toString() {
-        return StringFactory.shouldIsError(should, is, "lower-case letters");
+        return shouldIsError("lower-case letters");
     }
 }

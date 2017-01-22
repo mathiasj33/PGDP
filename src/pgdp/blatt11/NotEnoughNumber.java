@@ -9,6 +9,6 @@ public class NotEnoughNumber extends NotEnoughExc {
 
     @Override
     public String toString() {
-        return StringFactory.shouldIsError(should, is, "numbers");
+        return shouldIsError("numbers");
     }
 }

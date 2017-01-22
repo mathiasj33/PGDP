@@ -48,7 +48,7 @@ public class Set<T> implements Iterable<T> {
         if(list == null) {
             if(other.list != null) return false;
         }
-        for(T t : list) {
+        for(T t : this) {
             if(!other.contains(t)) return false;
         }
         for(Object obj : other) {
@@ -73,15 +73,6 @@ public class Set<T> implements Iterable<T> {
         }
         s += "}";
         return s;
-    }
-    
-    public static void main(String[] args) {
-        Set<String> set = new Set<>();
-        set = set.add("hallo");
-        set = set.add("1");
-        set = set.add("2");
-        set = set.add("3");
-        set = set.remove("2");
     }
 
     @Override

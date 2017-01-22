@@ -8,6 +8,6 @@ public class NotEnoughSpecial extends NotEnoughExc {
 
     @Override
     public String toString() {
-        return StringFactory.shouldIsError(should, is, "special characters");
+        return shouldIsError("special characters");
     }
 }

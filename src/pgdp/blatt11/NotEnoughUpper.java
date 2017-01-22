@@ -9,6 +9,6 @@ public class NotEnoughUpper extends NotEnoughLetter {
     
     @Override
     public String toString() {
-        return StringFactory.shouldIsError(should, is, "upper-case letters");
+        return shouldIsError("upper-case letters");
     }
 }

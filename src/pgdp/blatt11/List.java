@@ -11,7 +11,7 @@ public class List<T> implements Iterable<T> {
         size = 0;
     }
     
-    public List(Entry<T> head, int size) {
+    private List(Entry<T> head, int size) {
         this.head = head;
         this.size = size;
     }
