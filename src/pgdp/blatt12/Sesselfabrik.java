@@ -19,8 +19,9 @@ public class Sesselfabrik extends Thread {
                 sesselEinlagern();
             }
         } catch (Exception e) {
-            if (!(e instanceof InterruptedException))
+            if (!(e instanceof InterruptedException)) {
                 e.printStackTrace();
+            }
         }
     }
 
@@ -31,12 +32,12 @@ public class Sesselfabrik extends Thread {
                 System.out.println("Warten, dass Lager frei wird.");
                 lockLager.wait();
             }
-            System.out.println("Sessel eingelagert.");
-            lagerPlaetzeFrei--;
-            synchronized (lockSessel) {
-                sesselBestellbar++;
-                lockSessel.notify();
-            }
+        }
+        System.out.println("Sessel eingelagert.");
+        lagerPlaetzeFrei--;
+        synchronized (lockSessel) {
+            sesselBestellbar++;
+            lockSessel.notify();
         }
     }
 
