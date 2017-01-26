@@ -5,7 +5,7 @@ public class IntToString implements Fun<Integer, String> {
 
     @Override
     public String apply(Integer x) {
-        return "s" + x;  //TODO: WEGMACHEN
+        return "" + x;
     }
 
 }
