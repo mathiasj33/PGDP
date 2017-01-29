@@ -5,16 +5,19 @@ import java.util.Random;
 public class Player implements Runnable {
 
     private int value;
+    private boolean valueSet;
     private final Object valueLock = new Object();
     private final Random random = new Random();
 
     @Override
     public void run() {
         while (true) {
-            value = calculateValue();
             synchronized (valueLock) {
+                value = calculateValue();
+                valueSet = true;
+                valueLock.notify();
                 try {
-                    valueLock.wait();
+                    while(valueSet) valueLock.wait();
                 } catch (InterruptedException ex) {
                     break;
                 }
@@ -24,6 +27,9 @@ public class Player implements Runnable {
 
     public int getChoice() throws InterruptedException {
         synchronized (valueLock) {
+            while (!valueSet)
+                valueLock.wait();
+            valueSet = false;
             valueLock.notify();
             return value;
         }

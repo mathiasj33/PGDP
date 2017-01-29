@@ -17,7 +17,6 @@ public class FillArray<T, R> implements Runnable {
     
     @Override
     public void run() {
-        System.out.println("Compute from " + start + " to " + end);
         for(int i = start; i <= end; i++) {
             output[i] = function.apply(input[i]);
         }
