@@ -36,7 +36,7 @@ public class RockPaperScissors implements Runnable {
         System.out.println("Player 1 won " + p1Wins + " times; player 2 won " + p2Wins + " times and there were " + draws + " draws.");
     }
     
-    private int getWinner(int p1, int p2) {
+    public static int getWinner(int p1, int p2) {
         if(p1 == p2) return 0;
         if(p1 == 0 && p2 == 1) return 2;
         if(p1 == 0 && p2 == 2) return 1;
